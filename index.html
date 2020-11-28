@@ -4,12 +4,11 @@
   <title>Validation in JS</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-
-  <style type="text/css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<style type="text/css">
     body{
       background-image: url('img (3).jpg');
       background-repeat: no-repeat;
@@ -35,6 +34,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#menu1">Form Two</a>
+    </li>
+     <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu2">File Validation</a>
     </li>
     
   </ul>
@@ -131,6 +133,31 @@
     <button class="btn btn-primary" id="submit">Submit</button>
 
     </div>
+    
+    </div><!--End of Row-->
+    </div>
+
+     <div id="menu2" class="container tab-pane fade"><br>
+      <h3 class="bg-dark text-white text-center">Form Validation With Error Message</h3>
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+        	<div class="form-group">
+        		<input type="file" name="upload_img" id="upload_img" class="form-control">
+        		<span class="bg-dark text-white" id="spanFileName"></span>
+        	</div>
+        	 <button type="button" class="btn btn-primary" id="upload_file">Upload File</button>
+        </div>
+      </div><br>
+<div class="row">
+ 
+<div class="col-md-6 mx-auto">
+  <h3 class="bg-dark text-white text-center">Form Validation For Images</h3>
+          <div class="form-group">
+            <input type="file" name="upload_img_file" id="upload_img_file" class="form-control" onchange="return fileValidation()">
+            <span id="file_error"></span>
+          </div>
+           <button type="button" class="btn btn-primary" id="upload_img_file">Upload File</button>
+        </div>       
     
     </div><!--End of Row-->
     </div>
@@ -440,6 +467,65 @@ var itv_mobile = $("#mob").val();
 
 
 </script>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+ $("#upload_file").prop("disabled",true);
+//File validation 
+$('#upload_img').on("change",function () {
+
+                var fileExtension = ['pdf','doc','docx','txt'];
+                if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+                    // alert("Only '.jpeg','.jpg' formats are allowed.");
+                    $('#spanFileName').html(this.value);
+                    $('#spanFileName').html("Only '.pdf','.doc','.docx' formats are allowed.");
+                    $("#upload_file").prop("disabled",true);
+                    return false;
+                }
+                else {
+                    $('#spanFileName').html(this.value);
+                   //do what ever you want
+                   $("#upload_file").prop("disabled",false);
+                   return true;
+                } 
+ });
+ $("#upload_file").click(function(){
+var file_name = $('#upload_img').val();
+//alert(file_name);
+ });
+
+
+	});
+</script>
+
+<script>
+function fileValidation(){
+    var fileInput = document.getElementById('upload_img_file');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    if(!allowedExtensions.exec(filePath)){
+        //alert('Please upload file having extensions .jpeg/.jpg/.png/.gif only.');
+        $("#file_error").text("Please upload file having extensions .jpeg/.jpg/.png/.gif only.");
+        $("#file_error").css("color","red");
+        $("#upload_img_file").css("border-color","red");
+             setTimeout("$('#upload_img_file').css('border','')",6000);
+             setTimeout("$('#file_error').text('')",6000);
+        fileInput.value = '';
+        return false;
+    }else{
+        //Image preview
+        if (fileInput.files && fileInput.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').innerHTML = '<img src="'+e.target.result+'"/>';
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+}
+</script>
+
 
 </body>
 </html>
